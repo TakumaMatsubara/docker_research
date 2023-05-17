@@ -1,0 +1,26 @@
+FROM pytorch/pytorch:2.0.0-cuda11.7-cudnn8-devel
+
+ENV UID 19082
+
+# install essential softwares
+RUN if [ -e /etc/apt/sources.list.d/cuda.list ] ; then rm /etc/apt/sources.list.d/cuda.list; fi ; apt update
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
+RUN apt install -y vim zsh git ssh sudo language-pack-en tmux libssl-dev python3-dev libmysqlclient-dev sqlite3 build-essential python3-opencv
+RUN update-locale LANG=en_US.UTF-8
+RUN ln -s /opt/conda/bin/python /usr/bin/python
+
+RUN python -m pip install --upgrade pip
+RUN python -m pip install setuptools packaging
+
+RUN python -m pip install numpy matplotlib pylint tqdm sentencepiece transformers scikit-learn tensorboard black seaborn wandb pandas optuna mysqlclient scikit-optimize opencv-python opt-einsum axial-attention ujson unidecode
+RUN pip install  dgl -f https://data.dgl.ai/wheels/cu117/repo.html && pip install  dglgo -f https://data.dgl.ai/wheels-test/repo.html
+
+RUN yes | adduser --uid $UID --shell /usr/bin/zsh --disabled-password user -q
+RUN ln -s /workspace /home/user/workspace && chown user:user /workspace && chmod 755 /workspace
+RUN git clone https://github.com/TakumaMatsubara/my_setting.git /root/my_setting && cp /root/my_setting/.zshrc /home/user/.zshrc && chown user:user /home/user/.zshrc
+RUN git config --global user.email tamosongyuan3@gmail.com && git config --global user.name TakumaMatsubara
+ARG WANDB_KEY=9f5251083c7d34e3eb05a29f29babdb5d7af5435
+RUN python3 -c "import wandb; wandb.login(key='${WANDB_KEY}')"
+
+USER user
+WORKDIR /workspace
