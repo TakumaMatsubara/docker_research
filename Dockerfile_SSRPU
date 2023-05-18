@@ -19,8 +19,6 @@ RUN yes | adduser --uid $UID --shell /usr/bin/zsh --disabled-password user -q
 RUN ln -s /workspace /home/user/workspace && chown user:user /workspace && chmod 755 /workspace
 RUN git clone https://github.com/TakumaMatsubara/my_setting.git /root/my_setting && cp /root/my_setting/.zshrc /home/user/.zshrc && chown user:user /home/user/.zshrc
 RUN git config --global user.email tamosongyuan3@gmail.com && git config --global user.name TakumaMatsubara
-ARG WANDB_KEY=9f5251083c7d34e3eb05a29f29babdb5d7af5435
-RUN python3 -c "import wandb; wandb.login(key='${WANDB_KEY}')"
 
 USER user
 WORKDIR /workspace
