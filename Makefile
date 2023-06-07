@@ -15,6 +15,6 @@ start_analytics:
 attach_analytics:
 	docker exec -it matsubara_analytics zsh
 start_ssrpu:
-	docker run -it --gpus all --name matsubara_ssrpu -v ~/research/SSR-PU:/workspace takuma29/ssrpu:latest
+	docker run -it --gpus all --name matsubara_ssrpu -v ~/research/ssr-pu:/workspace -v /data/matsubara.19082/research:/mnt  takuma29/ssrpu:latest
 attach_ssrpu:
-	docker exec -it matsubara_ssrpu zsh
+	docker exec -it matsubara_ssrpu__ zsh
